@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  rubiks-cube-solver:
+    container_name: rubiks-cube-solver
+    image: pad/rubiks-cube-solver:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
