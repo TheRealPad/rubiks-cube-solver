@@ -2,7 +2,7 @@
 mod tests {
     use crate::constants::movements::{D, D_DOUBLE, D_DOUBLE_REVERSE, D_DOUBLE_TWICE, D_REVERSE, D_TWICE, U, U_DOUBLE, U_DOUBLE_REVERSE, U_DOUBLE_TWICE, U_REVERSE, U_TWICE};
     use crate::Cube::Cube::Cube;
-    use crate::Face::face::{CaseColor, Face, FacePosition};
+    use crate::Face::Face::{CaseColor, Face, FacePosition};
     use crate::Movements::Movements::Movements;
 
     #[test]

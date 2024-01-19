@@ -121,7 +121,7 @@ impl Face {
 
 #[cfg(test)]
 mod tests {
-    use crate::Face::face::{CaseColor, Face, FacePosition};
+    use crate::Face::Face::{CaseColor, Face, FacePosition};
 
     #[test]
     fn test_initialization() {
