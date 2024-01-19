@@ -3,12 +3,33 @@ use crate::constants::movements::{B, B_REVERSE, B_TWICE, D, D_DOUBLE, D_DOUBLE_R
 use crate::Cube::Cube::Cube;
 use crate::Face::face::{CaseColor, Face, FacePosition};
 
+// A Movement is represented here
 pub struct Movements<'a> {
+    /// a ref to the cube we want to update
     cube: &'a mut Cube,
+    /// a function to redirect to all the move functions
     move_functions: HashMap<&'static str, fn(&mut Movements<'a>, bool)>,
 }
 
 impl<'a> Movements<'a> {
+    /// Returns a Movement with all the function to move
+    ///
+    /// # Arguments
+    ///
+    /// * `cube` - the ref to the cube
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut cube = Cube::new(vec![
+    ///     Face::new(CaseColor::White, FacePosition::Top),
+    ///     Face::new(CaseColor::Yellow, FacePosition::Down),
+    ///     Face::new(CaseColor::Red, FacePosition::Left),
+    ///     Face::new(CaseColor::Blue, FacePosition::Front),
+    ///     Face::new(CaseColor::Green, FacePosition::Back),
+    ///     Face::new(CaseColor::Orange, FacePosition::Right)]);
+    /// let mut move_cube = Movements::new(&mut cube);
+    /// ```
     pub fn new(cube: &'a mut Cube) -> Movements<'a> {
         let mut move_functions: HashMap<&'static str, fn(&mut Movements<'a>, bool)> = HashMap::new();
         move_functions.insert(U, Self::move_u);
@@ -54,6 +75,12 @@ impl<'a> Movements<'a> {
         Movements { cube, move_functions }
     }
 
+    /// take a string and call the matching move
+    ///
+    /// # Argument
+    /// 
+    /// * `movement` - the string matching the move, see src/constants/movements.rs to see all movements
+    ///
     pub fn call_movement(&mut self, movement: &str) {
         if let Some(func) = self.move_functions.get(movement) {
             func(self, movement.contains("'"));
@@ -466,30 +493,60 @@ impl<'a> Movements<'a> {
     }
 
     fn translate_r_to_f(&mut self, _: bool) {
-        // 2 times u double and one d reverse
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_double_u(false);
+        self.move_d(true);
     }
 
     fn translate_l_to_f(&mut self, _: bool) {
-        // 2 times u double reverse and one d
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_double_u(true);
+        self.move_d(false);
     }
 
     fn translate_u_to_f(&mut self, _: bool) {
-        // 2 times l double and one r reverse
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_double_l(false);
+        self.move_r(true);
     }
 
     fn translate_d_to_f(&mut self, _: bool) {
-        // 2 times r double and one l reverse
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_double_r(false);
+        self.move_l(true);
     }
 
     fn translate_r_to_u(&mut self, _: bool) {
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_f(true);
+        self.move_b(false);
+        let mut top = self.cube.get_face(FacePosition::Top);
+        let mut left = self.cube.get_face(FacePosition::Left);
+        let mut down = self.cube.get_face(FacePosition::Down);
+        let mut right = self.cube.get_face(FacePosition::Right);
+        let saved_face = top.get_line(1);
+
+        top.set_line(1, right.get_column(1));
+        right.set_column(1, (down.get_line(1).2, down.get_line(1).1, down.get_line(1).0));
+        down.set_line(1, left.get_column(1));
+        left.set_column(1, (saved_face.2, saved_face.1, saved_face.0));
+        self.cube.set_face(top);
+        self.cube.set_face(right);
+        self.cube.set_face(down);
+        self.cube.set_face(left);
     }
 
     fn translate_l_to_u(&mut self, _: bool) {
-        self.cube.set_face(Face::new(CaseColor::Orange, FacePosition::Front));
+        self.move_f(false);
+        self.move_b(true);
+        let mut top = self.cube.get_face(FacePosition::Top);
+        let mut left = self.cube.get_face(FacePosition::Left);
+        let mut down = self.cube.get_face(FacePosition::Down);
+        let mut right = self.cube.get_face(FacePosition::Right);
+        let saved_face = top.get_line(1);
+
+        top.set_line(1, (left.get_column(1).2, left.get_column(1).1, left.get_column(1).0));
+        left.set_column(1, down.get_line(1));
+        down.set_line(1, (right.get_column(1).2, right.get_column(1).1, right.get_column(1).0));
+        right.set_column(1, saved_face);
+        self.cube.set_face(top);
+        self.cube.set_face(right);
+        self.cube.set_face(down);
+        self.cube.set_face(left);
     }
 }
