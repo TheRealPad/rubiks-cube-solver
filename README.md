@@ -31,3 +31,7 @@ docker-compose up # --build to start fresh
 ```bash
 cargo test
 ```
+
+### Documentation
+
+You can generate documentation by running ```cargo doc```
