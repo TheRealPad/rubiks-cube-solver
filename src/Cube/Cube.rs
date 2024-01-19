@@ -1,4 +1,4 @@
-use crate::Face::face::{Face, FacePosition};
+use crate::Face::Face::{Face, FacePosition};
 
 /// A Cube is represented here
 pub struct Cube {

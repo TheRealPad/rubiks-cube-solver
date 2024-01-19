@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use crate::constants::movements::{B, B_REVERSE, B_TWICE, D, D_DOUBLE, D_DOUBLE_REVERSE, D_DOUBLE_TWICE, D_REVERSE, D_TO_F, D_TWICE, F, F_REVERSE, F_TWICE, L, L_DOUBLE, L_DOUBLE_REVERSE, L_DOUBLE_TWICE, L_REVERSE, L_TO_F, L_TO_U, L_TWICE, M, M_REVERSE, M_TWICE, R, R_DOUBLE, R_DOUBLE_REVERSE, R_DOUBLE_TWICE, R_REVERSE, R_TO_F, R_TO_U, R_TWICE, U, U_DOUBLE, U_DOUBLE_REVERSE, U_DOUBLE_TWICE, U_REVERSE, U_TO_F, U_TWICE};
 use crate::Cube::Cube::Cube;
-use crate::Face::face::{CaseColor, Face, FacePosition};
+use crate::Face::Face::{CaseColor, Face, FacePosition};
 
 // A Movement is represented here
 pub struct Movements<'a> {
@@ -78,7 +78,7 @@ impl<'a> Movements<'a> {
     /// take a string and call the matching move
     ///
     /// # Argument
-    /// 
+    ///
     /// * `movement` - the string matching the move, see src/constants/movements.rs to see all movements
     ///
     pub fn call_movement(&mut self, movement: &str) {
