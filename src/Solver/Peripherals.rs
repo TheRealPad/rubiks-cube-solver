@@ -1,23 +1,20 @@
-use std::mem::replace;
-use crate::Solver::fridrich::Fridrich::Fridrich;
-use crate::Solver::roux::Roux::Roux;
+use std::ops::Deref;
+use crate::Solver::Fridrich::Fridrich::{Fridrich};
 use crate::Solver::Solver::Solver;
 
 pub struct Peripherals {
-    pub solver: Option<&'static dyn Solver>,
+    pub solver: Option<&'static mut dyn Solver>,
 }
 
 impl Peripherals {
-    pub fn take_serial(&mut self, method: String) -> &'static dyn Solver {
-        let solver: &'static dyn Solver = if method.eq("fridrich") {
-            &Fridrich {}
-        } else if method.eq("roux") {
-            &Roux {}
+    pub fn take_serial(&mut self, method: String) -> &'static mut dyn Solver {
+        let mut solver: &'static mut dyn Solver = if method.eq("Fridrich") {
+            Fridrich::new()
         } else {
-            &Fridrich {}
+            Fridrich::new()
         };
 
-        self.solver = Some(solver);
+        // self.solver = Some(solver);
         solver
     }
 }
@@ -35,19 +32,9 @@ mod tests {
         unsafe {
             PERIPHERALS.solver = None;
         }
-        let solver = unsafe { PERIPHERALS.take_serial("fridrich".to_string()) };
+        let solver = unsafe { PERIPHERALS.take_serial("Fridrich".to_string()) };
 
         assert_eq!(solver.get_description(), "The Fridrich method");
-    }
-
-    #[test]
-    fn test_take_serial_roux() {
-        unsafe {
-            PERIPHERALS.solver = None;
-        }
-        let solver = unsafe { PERIPHERALS.take_serial("roux".to_string()) };
-
-        assert_eq!(solver.get_description(), "The method roux");
     }
 
     #[test]
