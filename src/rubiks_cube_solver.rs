@@ -1,47 +1,49 @@
-use crate::constants::movements::{B, B_REVERSE, D, D_DOUBLE, D_DOUBLE_REVERSE, D_DOUBLE_TWICE, D_REVERSE, D_TO_F, F, F_REVERSE, L, L_DOUBLE, L_REVERSE, L_TO_F, L_TO_U, M, R, R_DOUBLE, R_REVERSE, R_TO_F, R_TO_U, U, U_DOUBLE, U_REVERSE, U_TO_F, U_TWICE};
+use std::panic;
 use crate::Cube::Cube::Cube;
 use crate::Face::Face::{CaseColor, Face, FacePosition};
-use crate::Movements::Movements::Movements;
+use crate::Solver::Peripherals::PERIPHERALS;
+use crate::Solver::Solver::Solver;
 
-pub fn rubiks_cube_solver() {
-    let mut cube = Cube::new(vec![
+fn error_handling(args: &Vec<String>) -> bool {
+    if args.len() < 2 {
+        panic!("not enough parameters")
+    }
+    if args.get(1).unwrap().contains("-h") || args.get(1).unwrap().contains("--help") {
+        println!("DESCRIPTION:");
+        println!("\tRubik's cube solver");
+        println!("ARGUMENTS");
+        println!("\t--a [name]: run the program with a selected algorithm");
+        println!("\t\t* Fridrich (if cannot find the name, default method)");
+        return true;
+    }
+    if args.len() < 3 {
+        panic!("not enough parameters")
+    }
+    return false
+}
+
+pub fn rubiks_cube_solver(args: Vec<String>) {
+    if error_handling(&args) {
+        return;
+    }
+    let result_solver = panic::catch_unwind(|| unsafe { PERIPHERALS.take_serial(args.get(2).unwrap().to_string()) });
+
+    if result_solver.is_err() {
+        println!("cannot create 2 instances of Solver");
+        return;
+    }
+    let mut solver = result_solver.unwrap();
+    solver.set_cube(Cube::new(vec![
         Face::new(CaseColor::White, FacePosition::Top),
         Face::new(CaseColor::Yellow, FacePosition::Down),
         Face::new(CaseColor::Red, FacePosition::Left),
         Face::new(CaseColor::Blue, FacePosition::Front),
         Face::new(CaseColor::Green, FacePosition::Back),
-        Face::new(CaseColor::Orange, FacePosition::Right)]);
-    let mut move_cube = Movements::new(&mut cube);
-
-    move_cube.call_movement(L_TO_U);
-    let face = cube.get_face(FacePosition::Front);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
-    let face = cube.get_face(FacePosition::Left);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
-    let face = cube.get_face(FacePosition::Back);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
-    let face = cube.get_face(FacePosition::Right);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
-    let face = cube.get_face(FacePosition::Top);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
-    let face = cube.get_face(FacePosition::Down);
-    println!("{:?}", face.get_face_position());
-    println!("{:?}", face.get_line(0));
-    println!("{:?}", face.get_line(1));
-    println!("{:?}", face.get_line(2));
+        Face::new(CaseColor::Orange, FacePosition::Right)]));
+    let cubeA = solver.get_cube();
+    println!("{:?}", cubeA.get_face(FacePosition::Front));
+    solver.resolve();
+    let cubeB = solver.get_cube();
+    println!("{:?}", cubeB.get_face(FacePosition::Front));
+    println!("{:?}", solver.get_movements());
 }

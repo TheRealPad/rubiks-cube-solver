@@ -1,6 +1,7 @@
 use crate::Face::Face::{Face, FacePosition};
 
 /// A Cube is represented here
+#[derive(Clone)]
 pub struct Cube {
     /// a vector to contain the 6 faces
     faces: Vec<Face>,
