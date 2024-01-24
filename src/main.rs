@@ -7,6 +7,7 @@ mod Face;
 mod Movements;
 mod constants;
 mod Solver;
+mod lib;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
