@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct CubeFace {
     pub name: String,
     pub rows: Vec<Vec<String>>,

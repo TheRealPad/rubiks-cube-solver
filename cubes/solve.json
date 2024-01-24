@@ -8,7 +8,7 @@
     ]
   },
   {
-    "name": "Left",
+    "name": "Right",
     "rows": [
       ["R", "R", "R"],
       ["R", "R", "R"],
@@ -24,7 +24,7 @@
     ]
   },
   {
-    "name": "Right",
+    "name": "Left",
     "rows": [
       ["O", "O", "O"],
       ["O", "O", "O"],
